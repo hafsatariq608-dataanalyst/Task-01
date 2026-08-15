@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicting Organic Content Decay & Opportunity Scoring — FlyRank ML Capstone</title>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #1e293b; max-width: 850px; margin: 0 auto; padding: 40px 20px; background-color: #f8fafc; }
+        .card { background: #ffffff; border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; border: 1px solid #e2e8f0; }
+        h1 { font-size: 2.25rem; color: #0f172a; margin-top: 0; }
+        h2 { font-size: 1.5rem; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 24px; }
+        .author { color: #64748b; font-weight: 500; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; border: 1px solid #cbd5e1; text-align: left; }
+        th { background-color: #f1f5f9; }
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .abstract { background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 4px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Predicting Organic Traffic Decay and Automated Content Refresh Opportunities</h1>
+        <div class="author">Author: Hafsa Tariq | Lane: Refresh / Content Opportunity Scoring | Date: August 2026</div>
 
+        <h2>Abstract</h2>
+        <div class="abstract">
+            How can digital publishers systematically prioritize outdated or decaying content for editorial refresh before significant organic traffic loss occurs? We evaluated a heuristic rule-based opportunity engine against a Random Forest classification model trained on anonymized historical Search Console and traffic performance features. The Random Forest model achieved a superior ROC-AUC compared to the static rule baseline on an 80/20 stratified holdout split. Model predictions were mapped into automated action labels (<code>REWRITE_AND_UPDATE</code>, <code>MONITOR</code>) with interpretable reason codes. This framework provides a decision-support mechanism to replace manual content auditing with automated, score-ranked editorial queues.
+        </div>
+
+        <h2>1. Introduction & Problem Statement</h2>
+        <p>Editorial capacity is inherently finite, while digital publication archives continuously grow. Manual auditing across thousands of URLs is inefficient and prone to subjective bias. This work supports editorial resource allocation by scoring and ranking content pieces based on observed statistical patterns of performance decay.</p>
+
+        <h2>2. Data Specification</h2>
+        <p>Built on the <code>content_refresh_anonymized.csv</code> release. Granularity is 1 row per unique content piece snapshot. <code>trend_pct</code> was deliberately excluded to prevent target leakage. Zero-position values were explicitly cleaned to <code>NaN</code>.</p>
+
+        <h2>3. Methodology & Validation</h2>
+        <p>The target proxy identifies high-priority decaying content (<code>trend_direction == 'down'</code> AND <code>ctr &lt; median_ctr</code>). Evaluated using an 80/20 Stratified Train/Test split across decision-moment knowable features (<code>impressions_90d</code>, <code>clicks_90d</code>, <code>ctr</code>, Clean Position, Content Age, Word Count).</p>
+
+        <h2>4. Experimental Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Week-4 Baseline</th>
+                    <th>Week-5 Random Forest</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ROC-AUC Score</td>
+                    <td>0.7214</td>
+                    <td><strong>0.8412</strong></td>
+                </tr>
+                <tr>
+                    <td>Precision</td>
+                    <td>0.6520</td>
+                    <td><strong>0.7845</strong></td>
+                </tr>
+                <tr>
+                    <td>Recall</td>
+                    <td>0.5980</td>
+                    <td><strong>0.7482</strong></td>
+                </tr>
+                <tr>
+                    <td>F1-Score</td>
+                    <td>0.6238</td>
+                    <td><strong>0.7659</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>5. Limitations & Framing</h2>
+        <p>This work measures observed statistical correlations and directional performance indicators. It does not claim causal proof of search engine ranking algorithms or guarantee post-refresh traffic recovery.</p>
+
+        <h2>6. Ranked Recommendations</h2>
+        <p>Articles scoring &ge; 60.0 are assigned to <code>REWRITE_AND_UPDATE</code> with reason codes (e.g., <code>TRAFFIC_DECLINE|LOW_CTR</code>). Items scoring &lt; 60.0 are assigned to <code>MONITOR</code>.</p>
+
+        <h2>7. Reproducibility</h2>
+        <p>All source code and reproducible Jupyter notebooks are available in the project repository under <code>work/notebooks/</code>.</p>
+
+        <h2>8. Acknowledgments & Data Credit</h2>
+        <p>Built on the FlyRank ML Internship dataset (<a href="https://flyrank.ai" target="_blank">FlyRank.ai</a>).</p>
+    </div>
+</body>
+</html>
